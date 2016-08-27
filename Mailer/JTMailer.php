@@ -137,9 +137,13 @@ class JTMailer implements JTMailerInterface
 		return $this;
 	}
 
-	public function setAttachments(array $filenames)
+	public function setAttachments(array $filenames, $reset = true)
 	{
-		$this->attachments = $filenames;
-		return his;
+		if($reset === true){
+			$this->attachments = $filenames;
+		} else {
+			$this->attachments = array_merge($this->attachments, $filenames);
+		}
+		return $this;
 	}
 }

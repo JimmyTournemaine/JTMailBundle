@@ -66,5 +66,16 @@ interface JTMailerInterface
 	 * @parameter $content The footer HTML content
 	 */
 	public function setFooter($content);
+
+	/**
+	 * Attache a file to the message
+	 */
+	public function attach($filename);
+
+	/*
+	 * Set many attachments to the message
+	 * Warning : it will erase previous attachments if reset is true (default)
+	 */
+	public function setAttachments(array $filenames, $reset = true)
 	
 }
