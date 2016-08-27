@@ -3,6 +3,8 @@ namespace JT\MailBundle\Mailer;
 
 use JT\MailBundle\Mailer\JTMailerInterface;
 use JT\MailBundle\Exception\NoMessageToSendException;
+use Symfony\Component\Templating\EngineInterface;
+
 
 /**
  * Mailer to easily send HTML and Plain text mail
@@ -40,9 +42,10 @@ class JTMailer implements JTMailerInterface
 	 */
 	private $attachments;
 
-	public function __construct($templating)
+	public function __construct(EngineInterface $templating, EventDispatcherInterface $dispatcher)
 	{
 		$this->templating = $templating;
+		$this->dispatcher = $dispatcher
 	}
 	
 	public function sendMessage($subject, $from, $to)
@@ -70,7 +73,14 @@ class JTMailer implements JTMailerInterface
 			$message->attach(\Swift_Attachment::fromPath($attachment));
 		}
 
-		return $this->mailer->send($message);
+		$event = new MailEvent();
+		$this->dispatcher->dispatch(JTMailEvents::MAIL_PRE_SENDING, $event);
+		$message = $event->getMessage();
+
+		$result = $this->mailer->send($message);
+
+		$this->dispatcher->dispatch(JTMailEvents::MAIL_SENT, $event);
+		return $result;
 	}
 
 	public function setHeaderTemplate($template, array $parameters = array())
