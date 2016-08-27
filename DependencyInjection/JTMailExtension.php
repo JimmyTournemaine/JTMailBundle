@@ -24,5 +24,10 @@ class JTMailExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+
+		if(isset($config['pre_mailer'])) {
+			$this->setParameter('jt_mail.pre_mailer.options', $config['pre_mailer']);
+			$loader->load('services/premailer.yml');
+		}
     }
 }
