@@ -10,6 +10,11 @@ services:
         tags:
             - { name: jt_mail.pre_sending }
 
-    jt_mailer.mailer:
+    jt_mail.mailer:
         class: JT\MailBundle\Mailer\JTMailer
         arguments: ["@templating", "@event_dispatcher"]
+
+    jt_mail.test.sending:
+        class: JT\MailBundle\Sending\SendingTest
+        arguments: ["@jt_mail.mailer"]
+
