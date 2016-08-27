@@ -1,5 +1,5 @@
 {
-    "name": "jimmytournemaine/jt-mail-bundle",
+    "name": "jimmytournemaine/mail-bundle",
     "type": "bundle",
     "description": "Easy to use mailer and crossjoin/pre-mailer integration",
     "keywords": ["mail", "mailer"],
