@@ -19,7 +19,7 @@
         "jimmytournemaine/pre-mailer": "master"
     },
     "autoload": {
-        "psr-4": { "JT\\MailBundle\\JTMailBundle\\": "" }
+        "psr-4": { "JT\\MailBundle\\": "" }
     }
 }
 
