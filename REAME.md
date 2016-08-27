@@ -87,4 +87,4 @@ Header and Footer are used only if you send a HTML message.
 
 The mailer can send :
 - [header] html [footer] [text] [attachments]
-- only text
+- Text only
