@@ -4,7 +4,7 @@ namespace JT\MailBundle\Mailer;
 /*
  * JTMailerInterface describe how to send mail easily
  */
-interface JTMailerInterface	
+interface JTMailerInterface
 {
 	/**
 	 * Send the message
@@ -76,6 +76,6 @@ interface JTMailerInterface
 	 * Set many attachments to the message
 	 * Warning : it will erase previous attachments if reset is true (default)
 	 */
-	public function setAttachments(array $filenames, $reset = true)
-	
+	public function setAttachments(array $filenames, $reset = true);
+
 }

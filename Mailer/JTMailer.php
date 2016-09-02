@@ -4,6 +4,11 @@ namespace JT\MailBundle\Mailer;
 use JT\MailBundle\Mailer\JTMailerInterface;
 use JT\MailBundle\Exception\NoMessageToSendException;
 use Symfony\Component\Templating\EngineInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use JT\MailBundle\Event\MailEvent;
+use JT\MailBundle\JTMailEvents;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
+use Symfony\Component\HttpFoundation\File\File;
 
 
 /**
@@ -16,6 +21,16 @@ class JTMailer implements JTMailerInterface
 	 * @var The templating service
 	 */
 	private $templating;
+
+	/**
+	 * @var The event dispatcher
+	 */
+	private $dispatcher;
+
+	/**
+	 * @var The Swift Mailer
+	 */
+	private $mailer;
 
 	/**
 	 * @var The header of the HTML Message
@@ -42,12 +57,14 @@ class JTMailer implements JTMailerInterface
 	 */
 	private $attachments;
 
-	public function __construct(EngineInterface $templating, EventDispatcherInterface $dispatcher)
+	public function __construct(\Swift_Mailer $mailer, EngineInterface $templating, EventDispatcherInterface $dispatcher)
 	{
+	    $this->mailer = $mailer;
 		$this->templating = $templating;
-		$this->dispatcher = $dispatcher
+		$this->dispatcher = $dispatcher;
+		$this->attachments = array();
 	}
-	
+
 	public function sendMessage($subject, $from, $to)
 	{
 		if($this->htmlBody === null && $this->textBody === null) {
@@ -65,7 +82,7 @@ class JTMailer implements JTMailerInterface
 		} else {
 			$message->setBody($this->header . $this->htmlBody . $this->footer, 'text/html');
 			if($this->textBody !== null) {
-				$this->addPart($this->textBody, 'text/plain');
+				$message->addPart($this->textBody, 'text/plain');
 			}
 		}
 
@@ -73,38 +90,35 @@ class JTMailer implements JTMailerInterface
 			$message->attach(\Swift_Attachment::fromPath($attachment));
 		}
 
-		$event = new MailEvent();
+		$event = new MailEvent($message);
 		$this->dispatcher->dispatch(JTMailEvents::MAIL_PRE_SENDING, $event);
 		$message = $event->getMessage();
 
-		$result = $this->mailer->send($message);
-
-		$this->dispatcher->dispatch(JTMailEvents::MAIL_SENT, $event);
-		return $result;
+		return $this->mailer->send($message);
 	}
 
 	public function setHeaderTemplate($template, array $parameters = array())
 	{
-		$this->header = $this->templating->renderView($template, $parameters);
-		return $this; 
+		$this->header = $this->templating->render($template, $parameters);
+		return $this;
 	}
 
 	public function setHtmlBodyTemplate($template, array $parameters = array())
 	{
-		$this->htmlBody = $this->templating->renderView($template, $parameters);
-		return $this; 
+		$this->htmlBody = $this->templating->render($template, $parameters);
+		return $this;
 	}
 
 	public function setTextBodyTemplate($template, array $parameters = array())
 	{
-		$this->textBody = $this->templating->renderView($template, $parameters);
-		return $this; 
+		$this->textBody = $this->templating->render($template, $parameters);
+		return $this;
 	}
 
 	public function setFooterTemplate($template, array $parameters = array())
 	{
-		$this->footer = $this->templating->renderView($template, $parameters);
-		return $this; 
+		$this->footer = $this->templating->render($template, $parameters);
+		return $this;
 	}
 
 	public function setHeader($content)
@@ -131,8 +145,13 @@ class JTMailer implements JTMailerInterface
 		return $this;
 	}
 
-	public function attach($filename)
+	public function attach($file)
 	{
+	    $filename = ($file instanceof File) ? $file->getFilename() : $file;
+	    if(!file_exists($file)){
+	        throw new FileNotFoundException("Unable to find $file.");
+	    }
+
 		$this->attachments[] = $filename;
 		return $this;
 	}

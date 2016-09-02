@@ -1,7 +1,9 @@
 <?php
 namespace JT\MailBundle\Event;
 
-class MailEvent
+use Symfony\Component\EventDispatcher\Event;
+
+class MailEvent extends Event
 {
 	protected $message;
 

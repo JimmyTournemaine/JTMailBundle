@@ -2,7 +2,7 @@ services:
 
     jt_mail.mailer:
         class: JT\MailBundle\Mailer\JTMailer
-        arguments: ["@templating", "@event_dispatcher"]
+        arguments: ["@mailer", "@templating", "@event_dispatcher"]
 
     jt_mail.test.sending:
         class: JT\MailBundle\Sending\SendingTest

@@ -1,0 +1,14 @@
+services:
+    jt_mail.event_listener.pre_sending:
+        class: JT\MailBundle\EventListener\MailPreSendingListener
+        arguments: ["@jt_mail.pre_mailer.pre_mailer"]
+        tags:
+            - { name: kernel.event_listener, event: jt_mail.pre_sending }
+        
+    jt_mail.pre_mailer.request:
+        class: JT\MailBundle\PreMailer\Request
+        arguments: ["%jt_mail.pre_mailer.options%"]
+
+    jt_mail.pre_mailer.pre_mailer:
+        class: JT\MailBundle\PreMailer\PreMailer
+        arguments: ["@buzz", "@jt_mail.pre_mailer.request", "%jt_mail.pre_mailer.generate_text%"]
