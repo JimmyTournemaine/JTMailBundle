@@ -39,7 +39,7 @@ class JTMailExtension extends Extension
         /* Footer settings */
         if(isset($config['footer'])){
             $header = $config['footer'];
-            $template = $header['footer'];
+            $template = $header['template'];
             $parameters = array();
             foreach ($header['parameters'] as $parameter){
                 $parameters[$parameter['key']] = $parameter['value'];
