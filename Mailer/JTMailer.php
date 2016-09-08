@@ -32,6 +32,8 @@ class JTMailer implements JTMailerInterface
 	 */
 	private $mailer;
 
+	private $from;
+
 	/**
 	 * @var The header of the HTML Message
 	 */
@@ -65,7 +67,7 @@ class JTMailer implements JTMailerInterface
 		$this->attachments = array();
 	}
 
-	public function sendMessage($subject, $from, $to)
+	public function sendMessage($subject, $to)
 	{
 		if($this->htmlBody === null && $this->textBody === null) {
 			throw new NoMessageToSendException();
@@ -73,7 +75,7 @@ class JTMailer implements JTMailerInterface
 
 		$message = \Swift_Message::newInstance()
 			->setSubject($subject)
-			->setFrom($from)
+			->setFrom($this->from)
 			->setTo($to)
 		;
 
@@ -95,6 +97,16 @@ class JTMailer implements JTMailerInterface
 		$message = $event->getMessage();
 
 		return $this->mailer->send($message);
+	}
+
+	public function setFrom($address, $name)
+	{
+	    if($name === null){
+	       $this->from = $address;
+	    } else {
+	        $this->from = array($address => $name);
+	    }
+
 	}
 
 	public function setHeaderTemplate($template, array $parameters = array())

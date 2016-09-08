@@ -1,14 +1,15 @@
 {
-	"name" : "jimmytournemaine/mail-bundle",
-	"type" : "bundle",
-	"description" : "Easy to use mailer and crossjoin/pre-mailer integration",
-	"keywords" : [
-		"mail",
-		"mailer"
-	],
-	"homepage" : "https://github.com/JimmyTournemaine/JTMailBundle",
-	"licence" : "MIT",
-	"authors" : [{
+    "name" : "jimmytournemaine/mail-bundle",
+    "type" : "symfony-bundle",
+    "description" : "Easy to use mailer and PreMailer API integration",
+    "keywords" : [
+        "mail",
+        "mailer"
+    ],
+    "homepage" : "https://github.com/JimmyTournemaine/JTMailBundle",
+    "license" : "MIT",
+    "authors" : [
+        {
 			"name" : "Jimmy Tournemaine",
 			"email" : "jimmy.tournemaine@yahoo.fr",
 			"homepage" : "http://tournemaine.com",
@@ -17,7 +18,7 @@
 	],
 	"require" : {
 		"php" : ">=5.4.0",
-		"symfony/symfony" : ">=2.6"
+		"symfony/symfony" : "2.*,>=2.6||~3"
 	},
 	"suggest" : {
 		"sensio/buzz-bundle" : "Used to call the PreMailer API"

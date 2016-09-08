@@ -1,8 +1,9 @@
 <?php
 namespace JT\MailBundle\Mailer;
 
-/*
+/**
  * JTMailerInterface describe how to send mail easily
+ * @author Jimmy Tournemaine <jimmy.tournemaine@yahoo.fr>
  */
 interface JTMailerInterface
 {
@@ -13,7 +14,14 @@ interface JTMailerInterface
 	 * @parameter $to 	The receiver of the message
 	 * @return boolean If message has been send successfully
 	 */
-	public function sendMessage($subject, $from, $to);
+	public function sendMessage($subject, $to);
+
+	/**
+	 * Set the sender of themessage
+	 * @param string $address
+	 * @param string $name
+	 */
+	public function setFrom($address, $name);
 
 	/**
 	 * Set the header part (for html only)

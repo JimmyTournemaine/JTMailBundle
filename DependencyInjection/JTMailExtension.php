@@ -25,8 +25,13 @@ class JTMailExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        /* Header settings */
+        /* From email settings */
         $mailerDefinition = $container->getDefinition('jt_mail.mailer');
+        if(isset($config['from'])){
+            $from = $config['from'];
+            $mailerDefinition->addMethodCall('setFrom', array($from['address'], $from['name']));
+        }
+        /* Header settings */
         if(isset($config['header'])){
             $header = $config['header'];
             $template = $header['template'];

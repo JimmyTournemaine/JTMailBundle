@@ -23,6 +23,12 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->arrayNode('from')
+                    ->children()
+                        ->scalarNode('address')->isRequired()->end()
+                        ->scalarNode('name')->defaultNull()->end()
+                    ->end()
+                ->end()
                 ->arrayNode('header')
                     ->children()
                         ->scalarNode('template')->isRequired()->end()
